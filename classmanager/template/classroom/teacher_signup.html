@@ -1,0 +1,76 @@
+{% extends 'classroom/base.html' %}
+{% load static %}
+{% block content %}
+
+
+<div class="login-page">
+  <img src="{% static 'images/login-background.PNG' %}" alt="">
+  <div class="student-signup-form">
+
+    <!-- Error Notification in Top Right Corner -->
+    {% if teacher_profile_form.errors or user_form.errors %}
+    <div class="error-notification" style="position: fixed; top: 20px; right: 20px; max-width: 400px; background-color: #f8d7da; border: 2px solid #f5c6cb; color: #721c24; padding: 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); z-index: 9999; font-size: 14px; line-height: 1.6;">
+      <button class="close-btn" onclick="this.parentElement.style.display='none';" style="position: absolute; top: 10px; right: 10px; background: none; border: none; color: #721c24; font-size: 20px; cursor: pointer; padding: 0;">✕</button>
+      <strong style="display: block; font-size: 16px; margin-bottom: 10px; border-bottom: 1px solid #f5c6cb; padding-bottom: 10px;">⚠️ Please Fix the Following Errors:</strong>
+      
+      <div style="margin: 10px 0;">
+        <!-- Display form field errors -->
+        {% for field in teacher_profile_form %}
+          {% if field.errors %}
+            <div style="margin: 5px 0;"><strong>{{ field.label }}:</strong> {{ field.errors.0 }}</div>
+          {% endif %}
+        {% endfor %}
+        
+        {% for field in user_form %}
+          {% if field.errors %}
+            <div style="margin: 5px 0;"><strong>{{ field.label }}:</strong> {{ field.errors.0 }}</div>
+          {% endif %}
+        {% endfor %}
+        
+        <!-- Also display non-field errors if any -->
+        {% if teacher_profile_form.non_field_errors %}
+          {% for error in teacher_profile_form.non_field_errors %}
+            <div style="margin: 5px 0;"><strong>Error:</strong> {{ error }}</div>
+          {% endfor %}
+        {% endif %}
+        
+        {% if user_form.non_field_errors %}
+          {% for error in user_form.non_field_errors %}
+            <div style="margin: 5px 0;"><strong>Error:</strong> {{ error }}</div>
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if registered %}
+    <h1>Thank you for registering.</h1>
+    {% else %}
+    <h1>Sign Up as a teacher.</h1>
+    
+
+    <form method="post">
+      {% csrf_token %}
+
+      <p><label >{{ teacher_profile_form.name.label_tag }}</label>{{ teacher_profile_form.name }}</p>
+      <p> <label for="">{{ teacher_profile_form.subject_name.label_tag }}</label>  {{ teacher_profile_form.subject_name }}</p>
+      <p> <label for="">{{ teacher_profile_form.phone.label_tag }}</label> {{ teacher_profile_form.phone }}</p>
+      <p> <label for="">{{ teacher_profile_form.email.label_tag }}</label>{{ teacher_profile_form.email }}</p>
+
+
+      <p> <label for="">{{ user_form.username.label_tag }}</label>{{ user_form.username }}</p>
+      <p> {{ user_form.username.help_text }}</p>
+      <p> <label for="">{{ user_form.password1.label_tag }}</label>{{ user_form.password1 }}</p>
+      <p> {{ user_form.password1.help_text }} </p>
+      <p> <label for="">{{ user_form.password2.label_tag }}</label>{{ user_form.password2 }}</p>
+      <p> {{ user_form.password2.help_text }} </p>
+      <input type="submit" name="" value="Sign Up">
+    </form>
+    <a href="{% url 'classroom:login' %}">Already have an account.</a>
+    {% endif %}
+  </div>
+</div>
+
+
+
+{% endblock %}
